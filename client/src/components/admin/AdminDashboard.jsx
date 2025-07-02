@@ -58,13 +58,14 @@ const AdminDashboard = ({ user, onLogout }) => {
       const data = await response.json();
       
       if (data.success) {
-        // Transform tasks to match frontend format
+        // Transform tasks to match frontend format with null checks
         const transformedTasks = data.data.map(task => ({
           id: task._id,
           title: task.title,
           description: task.description,
-          assignedTo: task.assignedTo.name,
-          assignedToId: task.assignedTo._id,
+          // ✅ Fixed: Add null checks for assignedTo
+          assignedTo: task.assignedTo?.name || 'Unassigned',
+          assignedToId: task.assignedTo?._id || null,
           dueDate: new Date(task.endDate).toISOString().split('T')[0],
           status: task.status,
           priority: task.priority,
